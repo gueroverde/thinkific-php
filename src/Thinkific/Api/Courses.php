@@ -18,7 +18,40 @@ class Courses extends AbstractApi{
     protected $service = 'courses';
 
     /**
-     * Get a business unit
+     * Get courses
+     *
+     * @param  
+     * @return array
+     */
+    public function getCourses($courseId)
+    {
+        return json_decode(
+            $this->api->get($this->service,
+                ['query' => 
+                    [
+                        'page' => $page, 
+                        'limit' => $limit
+                    ]
+                ]
+            )
+        );
+    }    
+    
+    /**
+     * Get courses by ID
+     *
+     * @param  
+     * @return array
+     */
+    public function getCourseById($courseId)
+    {
+        return json_decode(
+            $this->api->get($this->service . '/' . $courseId)
+        );
+    }
+
+    /**
+     * Get Chapters by Course ID
      *
      * @param  
      * @return array

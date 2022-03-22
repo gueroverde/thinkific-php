@@ -2,7 +2,7 @@
 Light Thinkific API library for PHP based on the documentation [found here](https://developers.thinkific.com/api/api-documentation/)
 
 ## Requirements
-* PHP 7.2+
+* PHP 7.4+
 
 ## Installation
 

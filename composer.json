@@ -1,16 +1,16 @@
 {
-    "name": "glrn/thinkific-php",
+    "name": "graphem/thinkific-php",
     "description": "Simple PHP library for Thinkific API",
     "license": "MIT",
     "authors": [
         {
-            "name": "GoLearn",
-            "email": "kontakt@golearn.dk"
+            "name": "Graphem",
+            "email": "info@graphem.ca"
         }
     ],
     "require": {
         "guzzlehttp/guzzle": "^7.2",
-        "lcobucci/jwt": "^3.3"
+        "lcobucci/jwt": "^4.1"
     },
     "autoload": {
         "psr-4": {"Thinkific\\": "src/Thinkific"}
