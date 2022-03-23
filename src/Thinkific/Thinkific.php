@@ -22,6 +22,7 @@ use Thinkific\Api\Enrollments;
 use Thinkific\Api\Categories;
 use Thinkific\Api\Products;
 use Thinkific\Adapter\GuzzleHttpAdapter;
+use Thinkific\Api\Bundles;
 
 class Thinkific
 {
@@ -105,6 +106,15 @@ class Thinkific
     public function getClient()
     {
         return $this->client;
+    }
+
+    /**
+     * @return Bundles
+     */
+    public function bundles()
+    {
+        $this->setAdapterWithApikey();
+        return new Bundles($this);
     }
 
     /**
