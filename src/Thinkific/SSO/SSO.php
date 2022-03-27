@@ -10,9 +10,8 @@
 
 namespace Thinkific\SSO;
 
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class SSO{
 
@@ -50,20 +49,21 @@ class SSO{
     */
     public function getLink($issueBy = '', array $userData, $returnUrl = '', $errorUrl = '')
     {
-        $signer  = new Sha256();
-        $time    = time();        
-        $token = (new Builder())->issuedBy($issueBy)
-                                ->issuedAt($time) 
-                                ->expiresAt($time + 3600)                          
-                                ->with('email', $userData['email']) 
-                                ->with('first_name', $userData['first_name']) 
-                                ->with('last_name', $userData['last_name']);
+        $time    = time();    
+        $payload = array(
+            'first_name' => $userData['first_name'],
+            'last_name' => $userData['last_name'],
+            'email' => $userData['email'],
+            'iat' => $time,
+            'exp' =>  $time + 3600,
+            'iss' => $issueBy
+        );
 
         if(isset($userData['external_id'])){
-            $token->with('external_id', $userData['external_id']);
+            $payload['external_id'] = $userData['external_id'];
         }
-
-        $token = $token->sign($signer, $this->apiKey)->getToken(); 
+        
+        $token = JWT::encode($payload, $this->apiKey, 'HS256');
 
         $url = "https://$this->subdomain.thinkific.com/api/sso/v2/sso/jwt?jwt=$token";
 
