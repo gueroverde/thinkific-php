@@ -16,35 +16,6 @@ class Users extends AbstractApi{
      * @var string
      */
     protected $service = 'users';
-
-    /**
-     * Base Request
-     *
-     * @param  array, int, int
-     * @return array
-     */
-    protected function sendRequestFilter(array $filter, $page = 1, $limit = 25, $unique = false)
-    {
-        $baseQuery = [
-            'page' => $page, 
-            'limit' => $limit
-        ];       
-        
-        $response = json_decode(
-            $this->api->get($this->service,
-                ['query' => array_merge($baseQuery, $filter)]
-            ));
-        
-        if(empty($response) || empty($response->items)){
-            return [];
-        }
-
-        if($unique){
-            return $response->items[0];
-        }
-
-        return $response->items;
-    }
     
     /**
      * Find by Email

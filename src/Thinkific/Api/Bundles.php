@@ -18,19 +18,6 @@ class Bundles extends AbstractApi{
      * @var string
      */
     protected $service = 'bundles';
-
-    /**
-     * Get Bundle
-     *
-     * @param  
-     * @return array
-     */
-    public function getBundleById($id)
-    {
-        return json_decode(
-            $this->api->get($this->service . '/' . $id)
-        );
-    }    
     
     /**
      * Get courses by Bundle ID
@@ -79,6 +66,49 @@ class Bundles extends AbstractApi{
         
         return json_decode(
             $this->api->post($this->service . '/' . $bundleId . '/enrollments' ,array('json' => $enrollData))
+        );
+    }
+
+    /**
+     * Find by Email
+     *
+     * @param  string
+     * @return Object
+     */
+    public function findEnrollmentsByEmail($search, $bundleId, $page = 1, $limit = 25)
+    {
+        return $this->sendRequestFilter(['query[email]' => $search], $page, $limit, true, $this->service.'/'.$bundleId.'/enrollments');
+    }
+
+    /**
+     * Find by UserId
+     *
+     * @param  string
+     * @return Object
+     */
+    public function findEnrollmentsByUserId($search, $bundleId, $page = 1, $limit = 25)
+    {
+        return $this->sendRequestFilter(['query[user_id]' => $search], $page, $limit, true, $this->service.'/'.$bundleId.'/enrollments');
+    }
+
+    /**
+     * Expire a bundle Enrollment
+     *
+     * @param  int
+     * @return array
+     */
+    public function expire($id, $userId)
+    {
+        $date = new DateTime();        
+        $yesterday = $date->modify('-1 day');
+
+        $enrollData = [
+            'user_id' => $userId,
+            'expiry_date' => $yesterday->format('Y-m-d\TH:i:s\Z')
+        ];
+    
+        return json_decode(
+            $this->api->put($this->service . '/' . $id . '/enrollments' ,array('json' => $enrollData))
         );
     }
 }

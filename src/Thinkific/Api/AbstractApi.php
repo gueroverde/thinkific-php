@@ -80,4 +80,35 @@ abstract class AbstractApi
         return json_decode($this->api->get($this->service . '/' . $id));
     }
 
+    /**
+     * Base Request
+     *
+     * @param  array, int, int
+     * @return array
+     */
+    protected function sendRequestFilter(array $filter, $page = 1, $limit = 25, $unique = false, $endPoint = '')
+    {
+        $endPoint = $endPoint ?: $this->service;
+
+        $baseQuery = [
+            'page' => $page, 
+            'limit' => $limit
+        ];       
+        
+        $response = json_decode(
+            $this->api->get($endPoint,
+                ['query' => array_merge($baseQuery, $filter)]
+            ));
+        
+        if(empty($response) || empty($response->items)){
+            return [];
+        }
+
+        if($unique){
+            return $response->items[0];
+        }
+
+        return $response->items;
+    }
+
 }
