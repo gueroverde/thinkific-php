@@ -13,7 +13,7 @@ namespace Thinkific\Api;
 use DateTime;
 
 class Enrollments extends AbstractApi{
-  
+
     /**
      * @var string
      */
@@ -25,19 +25,19 @@ class Enrollments extends AbstractApi{
      * @param  array, int, int
      * @return array
      */
-    protected function sendRequestFilter(array $filter, $page = 1, $limit = 25)
+    protected function sendRequestFilter(array $filter, $page = 1, $limit = 25, $unique = false, $endPoint = '')
     {
         $baseQuery = [
-            'page' => $page, 
+            'page' => $page,
             'limit' => $limit
-        ];       
-        
+        ];
+
         return json_decode(
             $this->api->get($this->service,
                 ['query' => array_merge($baseQuery, $filter)]
             ));
     }
-    
+
     /**
      * Find by User Id
      *
@@ -227,20 +227,20 @@ class Enrollments extends AbstractApi{
      * @return array
      */
     public function create($courseId, $userId, $activeDate = '', $expireDate = '2150-01-01')
-    {        
+    {
         $date = new DateTime();
         $date->modify('-1 day');
         $yesterday = $date->format('Y-m-d');
 
         $activeDate = $activeDate ? : $yesterday;
-        
+
         $enrollData = [
             'course_id' => $courseId,
             'user_id' => $userId,
             'activated_at' => DateTime::createFromFormat('Y-m-d',$activeDate)->format('Y-m-d\TH:i:s\Z'),
             'expiry_date' => DateTime::createFromFormat('Y-m-d',$expireDate)->format('Y-m-d\TH:i:s\Z')
         ];
-        
+
         return json_decode(
             $this->api->post($this->service,array('json' => $enrollData))
         );
@@ -267,7 +267,7 @@ class Enrollments extends AbstractApi{
         if(empty($enrollData)){
            return;
         }
-        
+
         return json_decode(
             $this->api->put($this->service . '/' . $id ,array('json' => $enrollData))
         );
@@ -281,11 +281,11 @@ class Enrollments extends AbstractApi{
      */
     public function expire($id)
     {
-        $date = new DateTime();        
+        $date = new DateTime();
         $yesterday = $date->modify('-1 day');
 
         $enrollData = ['expiry_date' => $yesterday->format('Y-m-d\TH:i:s\Z')];
-    
+
         return json_decode(
             $this->api->put($this->service . '/' . $id ,array('json' => $enrollData))
         );
